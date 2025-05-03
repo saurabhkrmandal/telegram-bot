@@ -81,7 +81,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🎉 *Congratulations!* You're among the *first 5 users!* 💎\n"
         "Enjoy my *premium membership* at just *₹299 or $3/month* 💖\n\n"
         "Paypal: https://www.paypal.me/ala288500 \n"
-        "UPI: bratyoung42@okicici \n\n"
+        "UPI: `bratyoung42@okicici` \n\n"
         "👉 Send your payment screenshot here and get access now 🔥",
         parse_mode="Markdown"
     )
