@@ -78,8 +78,12 @@ async def manual_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Respond to /start
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Hey there! 💋\nSend your payment screenshot here.\nPay ₹299 via UPI or $3 via PayPal to unlock my premium.\nThen DM me the screenshot!"
+        "🎉 *Congratulations!* You're among the *first 5 users!* 💎\n"
+        "Enjoy my *premium membership* at just *₹299 or $3/month* 💖\n\n"
+        "👉 Send your payment screenshot here and get access now 🔥",
+        parse_mode="Markdown"
     )
+
 
 # Start everything
 if __name__ == '__main__':
