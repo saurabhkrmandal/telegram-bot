@@ -76,15 +76,35 @@ async def manual_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # Respond to /start
+# Respond to /start
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    user_id = user.id
+    username = user.username or "No username"
+    first_name = user.first_name or "No name"
+
+    # Send welcome message to user
     await update.message.reply_text(
         "🎉 *Congratulations!* You're among the *first 5 users!* 💎\n"
         "Enjoy my *premium membership* at just *₹299 or $3/month* 💖\n\n"
-        "Paypal: https://www.paypal.me/ala288500 \n"
-        "UPI: `bratyoung42@okicici` \n\n"
-        "👉 Send your payment screenshot here and get access now 🔥",
+        "*Paypal:* [paypal.me/ala288500](https://www.paypal.me/ala288500)\n"
+        "*UPI:* `bratyoung42@okicici`\n\n"
+        "👉 _Send your payment screenshot here and get access now_ 🔥",
         parse_mode="Markdown"
     )
+
+    # Notify admin
+    await context.bot.send_message(
+        chat_id=ADMIN_USER_ID,
+        text=(
+            "📥 *New user started the bot!*\n"
+            f"👤 *Name:* {first_name}\n"
+            f"🔗 *Username:* @{username}\n"
+            f"🆔 *User ID:* `{user_id}`"
+        ),
+        parse_mode="Markdown"
+    )
+
 
 
 # Start everything
