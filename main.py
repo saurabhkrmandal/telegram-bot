@@ -67,11 +67,28 @@ async def manual_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     try:
-        # Expect: /reply user_id message text
         user_id = int(context.args[0])
-        message = ' '.join(context.args[1:])
-        await context.bot.send_message(chat_id=user_id, text=message)
+        message_type = context.args[1].lower()
+        content = ' '.join(context.args[2:])
+
+        if message_type == "text":
+            await context.bot.send_message(chat_id=user_id, text=content)
+
+        elif message_type == "photo":
+            await context.bot.send_photo(chat_id=user_id, photo=content)
+
+        elif message_type == "video":
+            await context.bot.send_video(chat_id=user_id, video=content)
+
+        elif message_type == "document":
+            await context.bot.send_document(chat_id=user_id, document=content)
+
+        else:
+            await update.message.reply_text("❌ Unsupported message type. Use text/photo/video/document.")
+            return
+
         await update.message.reply_text("✅ Message sent.")
+
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {e}")
 
