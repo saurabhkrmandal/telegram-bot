@@ -27,6 +27,10 @@ ADMIN_USER_ID = 1681983920
 
 # Handler for payment screenshots
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Skip this if it's the admin (admin's photo should be handled by forward_admin_media)
+    if update.effective_user.id == ADMIN_USER_ID:
+        return
+
     user = update.effective_user
     user_id = user.id
     username = user.username or "No username"
@@ -37,6 +41,15 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         from_chat_id=update.effective_chat.id,
         message_id=update.message.message_id
     )
+
+    # Also notify who sent it
+    await context.bot.send_message(
+        chat_id=ADMIN_USER_ID,
+        text=f"📷 Photo received from {username} (ID: {user_id})"
+    )
+
+    await update.message.reply_text("Screenshot received! We'll verify and give you access soon.")
+
 
     # Also notify who sent it
     await context.bot.send_message(
