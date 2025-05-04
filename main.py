@@ -24,12 +24,6 @@ import os
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 ADMIN_USER_ID = 1681983920
 
-print(f"✅ BOT_TOKEN = {repr(BOT_TOKEN)}")
-
-if not BOT_TOKEN:
-    raise Exception("🚫 BOT_TOKEN not loaded! Check Railway Variables.")
-
-
 # Handler for payment screenshots
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
