@@ -25,9 +25,6 @@ import os
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 ADMIN_USER_ID = 1681983920
 
-
-
-
 # Handler for payment screenshots
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -96,8 +93,8 @@ async def manual_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {e}")
 
-        # Forward media
-        async def forward_admin_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
+# Forward media
+async def forward_admin_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global TARGET_USER_ID
 
     if update.effective_user.id != ADMIN_USER_ID:
@@ -119,7 +116,6 @@ async def manual_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {e}")
 
-# Respond to /start
 # Respond to /start
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -149,25 +145,23 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
-
-
 # Start everything
 if __name__ == '__main__':
     keep_alive()
     nest_asyncio.apply()  # Apply fix for nested event loop (Replit)
 
     async def set_target(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    global TARGET_USER_ID
+        global TARGET_USER_ID
 
-    if update.effective_user.id != ADMIN_USER_ID:
-        await update.message.reply_text("Not authorized.")
-        return
+        if update.effective_user.id != ADMIN_USER_ID:
+            await update.message.reply_text("Not authorized.")
+            return
 
-    try:
-        TARGET_USER_ID = int(context.args[0])
-        await update.message.reply_text(f"✅ Target user set to ID: {TARGET_USER_ID}")
-    except:
-        await update.message.reply_text("❌ Invalid usage. Use: /target <user_id>")
+        try:
+            TARGET_USER_ID = int(context.args[0])
+            await update.message.reply_text(f"✅ Target user set to ID: {TARGET_USER_ID}")
+        except:
+            await update.message.reply_text("❌ Invalid usage. Use: /target <user_id>")
 
     async def main():
         app_bot = ApplicationBuilder().token(BOT_TOKEN).build()
@@ -178,9 +172,6 @@ if __name__ == '__main__':
         app_bot.add_handler(CommandHandler("reply", manual_reply))
         app_bot.add_handler(CommandHandler("target", set_target))
         app_bot.add_handler(MessageHandler(filters.PHOTO | filters.VIDEO | filters.Document.ALL, forward_admin_media))
-
-
-
 
         print("Bot is running...")
         await app_bot.run_polling()
