@@ -1,3 +1,4 @@
+TARGET_USER_ID = None
 from flask import Flask
 import threading
 import asyncio
@@ -23,6 +24,9 @@ def keep_alive():
 import os
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 ADMIN_USER_ID = 1681983920
+
+
+
 
 # Handler for payment screenshots
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -92,6 +96,28 @@ async def manual_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {e}")
 
+        # Forward media
+        async def forward_admin_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    global TARGET_USER_ID
+
+    if update.effective_user.id != ADMIN_USER_ID:
+        return
+
+    if not TARGET_USER_ID:
+        await update.message.reply_text("❌ You haven't set a target user.\nUse /target <user_id> first.")
+        return
+
+    try:
+        # Forward photo/video/document to the target user
+        await context.bot.copy_message(
+            chat_id=TARGET_USER_ID,
+            from_chat_id=update.message.chat_id,
+            message_id=update.message.message_id
+        )
+
+        await update.message.reply_text(f"✅ Media forwarded to user ID {TARGET_USER_ID}")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {e}")
 
 # Respond to /start
 # Respond to /start
@@ -130,6 +156,19 @@ if __name__ == '__main__':
     keep_alive()
     nest_asyncio.apply()  # Apply fix for nested event loop (Replit)
 
+    async def set_target(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    global TARGET_USER_ID
+
+    if update.effective_user.id != ADMIN_USER_ID:
+        await update.message.reply_text("Not authorized.")
+        return
+
+    try:
+        TARGET_USER_ID = int(context.args[0])
+        await update.message.reply_text(f"✅ Target user set to ID: {TARGET_USER_ID}")
+    except:
+        await update.message.reply_text("❌ Invalid usage. Use: /target <user_id>")
+
     async def main():
         app_bot = ApplicationBuilder().token(BOT_TOKEN).build()
 
@@ -137,6 +176,10 @@ if __name__ == '__main__':
         app_bot.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
         app_bot.add_handler(CommandHandler("start", start_command))
         app_bot.add_handler(CommandHandler("reply", manual_reply))
+        app_bot.add_handler(CommandHandler("target", set_target))
+        app_bot.add_handler(MessageHandler(filters.PHOTO | filters.VIDEO | filters.Document.ALL, forward_admin_media))
+
+
 
 
         print("Bot is running...")
