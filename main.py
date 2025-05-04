@@ -25,6 +25,8 @@ import os
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 ADMIN_USER_ID = 1681983920
 
+if update.effective_user.id == ADMIN_USER_ID:
+    return
 # Handler for payment screenshots
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Skip this if it's the admin (admin's photo should be handled by forward_admin_media)
