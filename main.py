@@ -157,6 +157,16 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ),
         parse_mode="Markdown"
     )
+#clear target
+async def clear_target(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    global TARGET_USER_ID
+
+    if update.effective_user.id != ADMIN_USER_ID:
+        await update.message.reply_text("Not authorized.")
+        return
+
+    TARGET_USER_ID = None
+    await update.message.reply_text("🧹 Target user has been cleared.")
 
 # Start everything
 if __name__ == '__main__':
@@ -185,6 +195,7 @@ if __name__ == '__main__':
         app_bot.add_handler(CommandHandler("reply", manual_reply))
         app_bot.add_handler(CommandHandler("target", set_target))
         app_bot.add_handler(MessageHandler(filters.PHOTO | filters.VIDEO | filters.Document.ALL, forward_admin_media))
+        app_bot.add_handler(CommandHandler("cleartarget", clear_target))
 
         print("Bot is running...")
         await app_bot.run_polling()
