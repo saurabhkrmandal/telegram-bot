@@ -25,6 +25,9 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_USER_ID = 1681983920
 
+
+print(f"🔐 Loaded BOT_TOKEN: {repr(BOT_TOKEN)}")
+
 # Handler for payment screenshots
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
