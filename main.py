@@ -4,7 +4,8 @@ import asyncio
 import nest_asyncio  # Important fix for Replit's event loop
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters, ContextTypes
-
+import os
+from dotenv import load_dotenv
 # Flask web server to keep bot alive
 app = Flask('')
 
@@ -20,7 +21,8 @@ def keep_alive():
     thread.start()
 
 # Telegram bot credentials
-BOT_TOKEN = '7385084500:AAG5gVtQS2u5ZMWzrvzvd6t18gICE8xfv-4'
+load_dotenv()
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_USER_ID = 1681983920
 
 # Handler for payment screenshots
